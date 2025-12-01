@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Star, ShoppingBag, BookOpen, Quote } from 'lucide-react';
+import { X, Star, ShoppingBag, BookOpen, Quote, AlertCircle, Check } from 'lucide-react';
 import { Book } from '../types';
 import { explainBookVibe } from '../services/gemini';
 
@@ -21,6 +21,14 @@ export const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ book, onClos
 
   if (!book) return null;
 
+  // Mock available copies logic
+  const conditions = [
+    { type: 'New', price: book.originalPrice, desc: 'Brand new, never read.' },
+    { type: 'Like New', price: book.originalPrice * 0.8, desc: 'Used. No visible wear.' },
+    { type: 'Very Good', price: book.originalPrice * 0.6, desc: 'Used. Minimal wear.' },
+    { type: 'Good', price: book.originalPrice * 0.45, desc: 'Used. Spine creases, wear.' },
+  ].filter(c => c.price >= book.price); // Filter to make sure the "main" price is the lowest or logical
+
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6">
       <div 
@@ -28,81 +36,132 @@ export const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ book, onClos
         onClick={onClose}
       />
       
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto flex flex-col md:flex-row overflow-hidden">
+      <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col md:flex-row">
         
         <button 
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 p-2 bg-white/50 hover:bg-white rounded-full backdrop-blur-md transition-all"
+            className="absolute top-4 right-4 z-10 p-2 bg-white/80 hover:bg-white rounded-full text-slate-500 hover:text-slate-800 transition-all"
         >
-            <X className="h-6 w-6 text-slate-800" />
+            <X className="h-6 w-6" />
         </button>
 
-        {/* Left: Image */}
-        <div className="w-full md:w-2/5 h-64 md:h-auto bg-slate-100 relative">
+        {/* Left: Image & Vibe */}
+        <div className="w-full md:w-1/3 bg-slate-50 p-6 flex flex-col items-center border-r border-slate-100 overflow-y-auto">
             <img 
                 src={book.coverUrl} 
                 alt={book.title} 
-                className="w-full h-full object-cover"
+                className="w-48 shadow-lg rounded mb-6"
             />
+            
+            {/* Vibe Section */}
+            <div className="w-full bg-white p-4 rounded-lg border border-emerald-100 shadow-sm">
+                 <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 flex items-center">
+                    <Quote className="h-3 w-3 mr-1" />
+                    Novella AI Vibe Check
+                 </h4>
+                {vibe ? (
+                    <p className="text-slate-700 italic text-sm leading-relaxed">"{vibe}"</p>
+                ) : (
+                    <div className="h-10 animate-pulse bg-slate-100 rounded"></div>
+                )}
+            </div>
+            
+            <div className="mt-6 w-full">
+                <h4 className="font-bold text-slate-800 mb-2">Details</h4>
+                <div className="text-sm text-slate-600 space-y-1">
+                    <div className="flex justify-between"><span>ISBN:</span> <span>978-0583920</span></div>
+                    <div className="flex justify-between"><span>Format:</span> <span>Paperback</span></div>
+                    <div className="flex justify-between"><span>Publisher:</span> <span>Penguin</span></div>
+                </div>
+            </div>
         </div>
 
-        {/* Right: Info */}
-        <div className="flex-1 p-8 flex flex-col">
-            <div className="mb-6">
-                <div className="flex items-center space-x-2 text-novella-accent text-sm font-bold uppercase tracking-wider mb-2">
-                    <span>{book.genre}</span>
-                    <span>•</span>
-                    <div className="flex items-center">
-                        <Star className="h-4 w-4 fill-current mr-1" />
-                        {book.rating}
-                    </div>
+        {/* Right: Info & Buying Options */}
+        <div className="flex-1 flex flex-col h-full overflow-hidden">
+            <div className="p-6 md:p-8 flex-1 overflow-y-auto custom-scrollbar">
+                <div className="mb-1 text-sm font-semibold text-novella-accent uppercase tracking-wider">
+                    {book.genre}
                 </div>
-                
-                <h2 className="font-serif text-3xl md:text-4xl font-bold text-slate-900 mb-2 leading-tight">
+                <h2 className="font-serif text-3xl font-bold text-slate-900 mb-2">
                     {book.title}
                 </h2>
-                <p className="text-lg text-slate-600 font-medium">by {book.author}</p>
-            </div>
-
-            {/* Generated Vibe Quote */}
-            {vibe ? (
-                <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-100 mb-6 relative">
-                    <Quote className="h-6 w-6 text-emerald-200 absolute top-2 left-2 -z-0" />
-                    <p className="text-emerald-800 italic relative z-10 pl-6 text-sm md:text-base">"{vibe}"</p>
+                <div className="flex items-center space-x-4 mb-6">
+                    <span className="text-lg text-slate-600">by <span className="underline decoration-slate-300">{book.author}</span></span>
+                    <div className="flex items-center text-yellow-400 bg-yellow-50 px-2 py-0.5 rounded-full">
+                        <Star className="h-4 w-4 fill-current mr-1" />
+                        <span className="text-sm font-bold text-slate-700">{book.rating}</span>
+                    </div>
                 </div>
-            ) : (
-                <div className="h-16 mb-6 animate-pulse bg-slate-50 rounded-lg"></div>
-            )}
 
-            <div className="prose prose-slate mb-8 flex-1 overflow-y-auto max-h-60 custom-scrollbar pr-2">
-                <p className="text-slate-600 leading-relaxed">{book.description}</p>
-            </div>
-
-            <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-6">
-                <div>
-                    <span className="block text-sm text-slate-400">Price</span>
-                    <span className="text-3xl font-serif font-bold text-slate-900">${book.price.toFixed(2)}</span>
+                <div className="prose prose-slate prose-sm mb-8">
+                    <p>{book.description}</p>
                 </div>
+
+                {/* Copies Section (ThriftBooks style) */}
+                <h3 className="font-bold text-lg text-slate-800 mb-4 flex items-center">
+                    Select a Copy
+                    <span className="ml-2 text-xs font-normal text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">3 Available</span>
+                </h3>
                 
-                <div className="flex space-x-3">
-                    <button className="px-6 py-3 rounded-full border border-slate-200 text-slate-700 font-medium hover:bg-slate-50 transition-colors flex items-center">
-                        <BookOpen className="h-5 w-5 mr-2" />
-                        Preview
-                    </button>
-                    <button 
-                        onClick={() => {
-                            onAddToCart(book);
-                            onClose();
-                        }}
-                        className="px-8 py-3 rounded-full bg-novella-dark text-white font-medium hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20 flex items-center"
-                    >
-                        <ShoppingBag className="h-5 w-5 mr-2" />
-                        Add to Cart
-                    </button>
+                <div className="space-y-3">
+                    {/* The specific copy user clicked */}
+                    <div className="flex items-center justify-between p-4 rounded-lg border-2 border-novella-green bg-emerald-50/30">
+                        <div className="flex items-start gap-3">
+                            <div className="mt-1">
+                                <CheckCircle className="h-5 w-5 text-novella-green" />
+                            </div>
+                            <div>
+                                <div className="font-bold text-slate-900">{book.condition}</div>
+                                <div className="text-xs text-slate-500">Ships from Novella Warehouse</div>
+                            </div>
+                        </div>
+                        <div className="text-right">
+                             <div className="text-xl font-bold text-novella-green">${book.price.toFixed(2)}</div>
+                             <div className="text-xs text-novella-accent font-bold">+{book.points} pts</div>
+                        </div>
+                    </div>
+
+                    {/* Other Mock Conditions */}
+                    {conditions.map((c, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:border-slate-300 transition-colors opacity-70 hover:opacity-100">
+                             <div>
+                                <div className="font-bold text-slate-700">{c.type}</div>
+                                <div className="text-xs text-slate-500">{c.desc}</div>
+                            </div>
+                            <div className="text-right">
+                                <div className="font-bold text-slate-700">${c.price.toFixed(2)}</div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
+            </div>
+
+            <div className="p-4 bg-white border-t border-slate-100 flex items-center justify-between shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                <div>
+                    <span className="text-xs text-slate-500 block">Total</span>
+                    <span className="text-2xl font-bold text-slate-900">${book.price.toFixed(2)}</span>
+                </div>
+                <button 
+                    onClick={() => {
+                        onAddToCart(book);
+                        onClose();
+                    }}
+                    className="px-8 py-3 rounded bg-novella-red text-white font-bold hover:bg-red-600 transition-colors shadow-lg shadow-red-900/20 flex items-center"
+                >
+                    <ShoppingBag className="h-5 w-5 mr-2" />
+                    Add to Cart
+                </button>
             </div>
         </div>
       </div>
     </div>
   );
 };
+
+// Helper component for the checkmark
+const CheckCircle = ({ className }: { className?: string }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+        <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+);

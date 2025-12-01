@@ -6,10 +6,13 @@ export const MOCK_BOOKS: Book[] = [
     title: "The Midnight Library",
     author: "Matt Haig",
     coverUrl: "https://picsum.photos/seed/midnight/300/450",
-    price: 13.99,
+    price: 8.99,
+    originalPrice: 26.00,
     rating: 4.2,
     description: "Between life and death there is a library, and within that library, the shelves go on forever. Every book provides a chance to try another life you could have lived.",
     genre: "Fiction",
+    condition: "Very Good",
+    points: 45,
     isBestSeller: true
   },
   {
@@ -17,10 +20,13 @@ export const MOCK_BOOKS: Book[] = [
     title: "Project Hail Mary",
     author: "Andy Weir",
     coverUrl: "https://picsum.photos/seed/hailmary/300/450",
-    price: 16.50,
+    price: 12.50,
+    originalPrice: 28.99,
     rating: 4.8,
     description: "Ryland Grace is the sole survivor on a desperate, last-chance mission—and if he fails, humanity and the earth itself will perish.",
     genre: "Sci-Fi",
+    condition: "Like New",
+    points: 60,
     isBestSeller: true
   },
   {
@@ -28,10 +34,13 @@ export const MOCK_BOOKS: Book[] = [
     title: "Educated",
     author: "Tara Westover",
     coverUrl: "https://picsum.photos/seed/educated/300/450",
-    price: 14.25,
+    price: 6.25,
+    originalPrice: 18.99,
     rating: 4.6,
     description: "Born to survivalists in the mountains of Idaho, Tara Westover was seventeen the first time she set foot in a classroom.",
     genre: "Memoir",
+    condition: "Good",
+    points: 30,
     isBestSeller: false
   },
   {
@@ -39,10 +48,13 @@ export const MOCK_BOOKS: Book[] = [
     title: "Dune",
     author: "Frank Herbert",
     coverUrl: "https://picsum.photos/seed/dune/300/450",
-    price: 18.00,
+    price: 9.49,
+    originalPrice: 18.00,
     rating: 4.7,
     description: "Set on the desert planet Arrakis, Dune is the story of the boy Paul Atreides, heir to a noble family tasked with ruling an inhospitable world where the only thing of value is the 'spice' melange.",
     genre: "Sci-Fi",
+    condition: "Acceptable",
+    points: 40,
     isBestSeller: true
   },
   {
@@ -50,25 +62,31 @@ export const MOCK_BOOKS: Book[] = [
     title: "Atomic Habits",
     author: "James Clear",
     coverUrl: "https://picsum.photos/seed/atomic/300/450",
-    price: 15.00,
+    price: 14.00,
+    originalPrice: 27.00,
     rating: 4.9,
     description: "No matter your goals, Atomic Habits offers a proven framework for improving--every day.",
     genre: "Self-Help",
+    condition: "New",
+    points: 70,
     isBestSeller: true
   },
-    {
+  {
     id: '6',
     title: "The Song of Achilles",
     author: "Madeline Miller",
     coverUrl: "https://picsum.photos/seed/achilles/300/450",
-    price: 12.99,
+    price: 7.99,
+    originalPrice: 16.99,
     rating: 4.5,
     description: "Greece in the age of heroes. Patroclus, an awkward young prince, has been exiled to the court of King Peleus and his perfect son Achilles.",
     genre: "Historical Fiction",
+    condition: "Good",
+    points: 35,
     isBestSeller: false
   }
 ];
 
 export const CATEGORIES = [
-  "Fiction", "Non-Fiction", "Sci-Fi", "Mystery", "Romance", "History", "Self-Help", "Fantasy"
+  "Fiction", "Non-Fiction", "Sci-Fi", "Mystery", "Romance", "History", "Self-Help", "Fantasy", "Thrift Deals"
 ];
