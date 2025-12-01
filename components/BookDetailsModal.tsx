@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Star, ShoppingBag, BookOpen, Quote, AlertCircle, Check } from 'lucide-react';
+import { X, Star, ShoppingBag, Quote, CheckCircle2 } from 'lucide-react';
 import { Book } from '../types';
 import { explainBookVibe } from '../services/gemini';
 
@@ -8,6 +8,14 @@ interface BookDetailsModalProps {
   onClose: () => void;
   onAddToCart: (book: Book) => void;
 }
+
+// Helper component for the checkmark - defined before usage
+const CheckCircle = ({ className }: { className?: string }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+        <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+);
 
 export const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ book, onClose, onAddToCart }) => {
   const [vibe, setVibe] = useState<string>('');
@@ -157,11 +165,3 @@ export const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ book, onClos
     </div>
   );
 };
-
-// Helper component for the checkmark
-const CheckCircle = ({ className }: { className?: string }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-        <polyline points="22 4 12 14.01 9 11.01" />
-    </svg>
-);

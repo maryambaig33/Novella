@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Sparkles, Tag } from 'lucide-react';
+import { Sparkles, Tag } from 'lucide-react';
 
 interface HeroProps {
   onExplore: () => void;
